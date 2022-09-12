@@ -4,7 +4,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [ClientsModule.register([{name: 'ITEM_MICROSERVICE', transport: Transport.TCP}])],
+  imports: [
+    ClientsModule.register([
+      {
+        name: "MQTT_SERVICE",
+        transport: Transport.MQTT,
+        options:{
+          url: 'mqtt://localhost:1883'
+        }
+        
+      }
+    ])
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

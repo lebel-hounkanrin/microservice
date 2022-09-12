@@ -1,21 +1,15 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+  @Inject("MQTT_SERVICE") private client: ClientProxy
+  ){}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get("/item/:id")
-  getById(@Param("id") id: number){
-    return this.appService.getItemById(id)
-  }
-  @Post('/create')
-  create(@Body() createItemDto){
-    return this.appService.createItem(createItemDto)
+  @Get("notifications") 
+  getNotifications(){
+    return this.client.send('notification_channel', "It's a message from a Client")
   }
 }
